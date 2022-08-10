@@ -1,0 +1,61 @@
+Basic problem: find five five-letter words that cover 25 letters of
+the alphabet.  We are going to solve this using an exact cover solver,
+in this case AllExactCovers() of sage.
+
+It is theoretically possible to use dance_long.c in ../Knuth but this
+flakes out because it does not have enough recursive space.  So we
+will suse sage.
+
+The idea is that we have to cover all 26 letters, using five
+five-letter words and one single-letter.
+
+File "words5" [not under version control] has five-letter words
+gleaned from the macosx dictionary.  File
+"words5_including_stupid_words" includes some of the words used at
+
+https://stackoverflow.com/questions/71011062/find-5-letter-words-with-25-distinct-characters
+
+File "wordle_words" is from https://github.com/tabatkins/wordle-list
+which gives "a list of all possible words that are potentiall valid
+guesses in wordle, taken straight from the game's source code".
+
+File "wordle_weeded.txt" [also not under version control] is created
+from the wordle word list, see file "sifter.R" for instructions
+
+File "maker5.R" creates file data.py [not under version control] which
+is used by sage for the five-letter words problem.  Most of the
+fiddly bits are getting the parentheses right.  The five-letter words
+come first and the single-letter fillers are right at the end.  The
+final, 27th column, is an indicator variable stopping the solver from
+using more than one single letter.
+
+In sage, file "data.py" creates a large matrix M of ones and zeros
+which can be used for an exact cover problem.  Here is the top and
+tail of it:
+
+M = Matrix([
+[ 1,1,1,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ,0],
+[ 1,1,1,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ,0],
+[ 1,1,1,0,1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ,0],
+[ 1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0 ,0],
+[ 1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0 ,0],
+[ 1,1,1,0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 ,0],
+[snip]
+[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1 ],
+[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1 ],
+[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1 ],
+[ 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1 ]
+])
+
+
+In Sage:
+
+load("data.py") 
+for cover in AllExactCovers(M): 
+	print(cover) 
+
+File "allwordsmaker.R" does the same but considers all words, not just
+five-letter words.  Much easier.
+
+File "results.R" uses cut-and-pasted output from sage and prints the
+actual words out for the allwordsmaker.R case.
