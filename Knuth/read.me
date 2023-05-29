@@ -1,0 +1,29 @@
+The source code is dance.w
+
+Then convert dance.w to dance.c using ctangle.w
+Then compile dance.c using gcc dance.c
+
+This doesn't compile cleanly, so I added the line "#include
+<stdlib.h>" to dance.w, by the other #includes. This avoids some
+compilation problems.
+
+You can also type cweave dance.w to create a tex file; use tex on this
+not latex.
+
+[code.R is superceded by code2.R].  In directory butterfly_5x5/ run
+"code.R" in an R session, which creates a file called "data.txt" then
+in this directory type:
+
+ cat ../butterfly_5x5/data2.txt | ./a.out 1 
+
+at the BASH prompt to get output.
+
+
+There is another file called "dance_long.w" which is a slight
+modification of "dance.w", that allows for longer column names.  This
+needs file "data2.txt" instead of "data.txt".  File data2.txt is
+created by "code2.R" in ../butterfly_5x5/
+
+This gives a more verbose (and very much more readable) analysis
+because the column names are longer and more readable; it is otherwise
+identical.
