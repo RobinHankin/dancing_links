@@ -1,0 +1,42 @@
+This directory contains modified files for the 7x7 bugs puzzle.
+code3.R produces data2.txt.  I started a run with 
+
+LE223:~/laptop/dancing_links/bugs_7x7% cat data2.txt | ../Knuth/a.out 1 > ans.txt
+
+at 
+
+Wed Nov 24 08:30:16 GMT 2010
+
+
+Let's see if it finishes!
+
+
+
+
+File 'tiles_bugs7x7.txt' is a data frame of all 49 pieces, placed in
+standard order as seen in standard_order_bugs_7x7.jpg.  The seven
+piece types are copp, fire, viol, emer, lady, gold, sapp.  Each row
+specifies a piece, with columns being the central bug type, piece
+number, and the last four columns are the edge types.  Take the first
+piece as an example.  The 'North' edge is "ligrL".  The "ligr" means
+"light green" and "L" means "left".  This means that the North side is
+a light green bug, with its left hand side showing.  This can get
+confusing.  The edge types are {ligr,oran,redd,blue,dagr}x{L,R}.  And
+the edge types appear in function convert_string_to_edgetype() in
+function code3.R
+
+File "special_edges.svg" shows special dispensation for the
+"watermark" visible on some of the pieces.  Note that the West Side of
+tile fire2 fits against the West (sic) side of lady2 (remember that
+the standard orientation is not necessarily the orientation in the
+finished puzzle).
+
+You can see the completed watermark on the completed_bugs7x7.jpg image
+on the four squares row 4, column 2, row 4, column 3, row 4 column 2,
+row 4 column 3.  It is a lot more visible on the real puzzle.
+
+The special edge types are encoded in to function tabs() in file
+code3.R, and is activated if flag "use_watermark" is set to TRUE.  I
+put them there to make the dancing links algorithm work better but do
+not know how much faster it makes the program run.  Alice says it is
+cheating.
