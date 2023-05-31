@@ -1,0 +1,35 @@
+Directory "butterfly_5x5/" contains files for the Cheatwell 5x5 butterfly puzzle.
+Directory "fish_6x6/" contains files for the Cheatwell 6x6 fish puzzle.
+Directory "bugs_7x7/" contains files for the Cheatwell 7x7 bugs puzzle. [not present]
+Directory "fish_19_hexagons" contains files for the hexagonal fish puzzle.
+Directory "Knuth" contains Knuth's web program, downloaded from his site
+Directory "Xi" contains stuff from Xi.
+Directory "useful_R_functions/" contains, er, useful R functions.
+
+5x5 no LS:    25!*4^25           ~= 1.7e40
+5x5 any LS:   161280*(5!)^5*4^25 ~= 4.5e30
+5x5 given LS:   (5!)*(5!)^5*4^25 ~= 3.4e27
+
+6x6 no LS:    36!                ~= 3.7e41
+6x6 any LS:   812851200*(6!)^6   ~= 1.1e26
+6x6 given LS:      (6!)*(6!)^6   ~= 1.0e20
+
+7x7 no LS:    49!*4^49           ~= 1.9e92
+7x7 any LS:   6.1e13*(7!)^7*4^49 ~= 1.6e69
+7x7 given LS:   (7!)*(7!)^7*4^49 ~= 1.3e59
+
+hexagons      (19!)*6^19         ~= 7.4e31
+
+
+[number of latin squares in the 'any LS' categories taken from OEIS, A002860]
+[note that the 6x6 puzzle does not have a 4^36 term because the pieces cannot be rotated]
+
+
+the general formula for the given LS is (n!) * (n!)^n * 4^(n^2), the
+first term being the number of ways of assigning 'n' colours to 'n'
+numbers, the second being the number of ways of arranging 'n' groups
+of 'n' pieces, and the third being the number of ways of orienting n^2
+pieces in one of four ways.
+
+
+
