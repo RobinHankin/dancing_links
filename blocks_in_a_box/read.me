@@ -1,0 +1,40 @@
+This is blocks-in-a-box, p844 of "Winning Ways" by Berlekamp, Conway, Guy.
+
+we have one 2x2x2 cube, one 2x2x1 square, three 3x1x1 rods and
+thirteen 4x2x1 planks.  Have to fit these 18 pieces into a single
+5x5x5 cube.
+
+Executing code.R (specifically, 'R CMD BATCH code.R' on the command
+line; or, within an R session typing 'source("code.R") at the prompt)
+will create a file which is named f.sage and one named g.sage.
+
+File ~/f.sage creates sage commands which may be read in sage.  Then
+look at the following lines, taken from sage docs:
+
+
+sage: from sage.combinat.dlx import *
+sage: ones = [[1,[1,2,3]]]
+sage: ones+= [[2,[1,3]]]
+sage: ones+= [[3,[2]]]
+sage: ones+= [[4,[4]]]
+sage: DLXM = DLXMatrix(ones,[4])
+sage: for C in DLXM:
+....:      print(C)
+[4, 1]
+[4, 2, 3]
+
+
+Do this with the ones created by f.sage.
+
+File g.sage creates a matrix which may be used by commands like:
+
+sage: M = Matrix([[1,1,0],[1,0,1],[0,1,1]])  #no exact covers
+sage: for cover in AllExactCovers(M):
+....:     print(cover)
+sage: M = Matrix([[1,1,0],[1,0,1],[0,0,1],[0,1,0]]) #two exact covers
+sage: for cover in AllExactCovers(M):
+....:     print(cover)
+[(1, 1, 0), (0, 0, 1)]
+[(1, 0, 1), (0, 1, 0)]
+
+(which are also taken from the sage docs).
