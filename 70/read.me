@@ -1,0 +1,73 @@
+File 70.R solves the problem of packing 1x1, a 2x2, ..., 24x24 squares
+into a 70x70 square.  Observe that \sum_{i=1}^24 i^2=70^2.
+
+File 70.R produces 'f.txt' which may be processed using:
+
+cat f.txt | ../Knuth/a.out 1 > ans.txt
+
+
+NB: change 'f.txt' to another file [eg ftt.txt] if you wish.  Change
+a.out to another executable [eg dance_long] if you wish.
+
+File f.txt is long: it has 1 + (47^2 + 48^2 + ... + 70^2)=83285 lines: 1 for
+the header, 47^2=2209 for the position of the 24x24 square, 48^2=2304
+positions for the 23x23 square, and so on until 69^2 for the 2x2
+square and finally 70^2 for the 1x2 square.
+
+
+Bear in mind that 70.R takes a long time to run (~20 minutes)
+
+ans.txt shows no solutions.
+
+Note that 70.R solves the square-packing problem; 70t.R solves the
+problem of packing the 24 squares into a 70x70 *toroidal* square.
+File 70t.R writes file ft.txt (the "t" stands for "toroidal").
+
+
+70t.R takes longer than 70.R to run.  It has been modified to write
+ftt.txt (see below).
+
+File ft.txt has 1 + 24*70^2=117601 lines: 1 for the header; and each
+of the squares has 70^2 positions.  Observe that *each* square has
+70^2=24 positions (in the case of a torus).
+
+File ftt.txt uses a device to ensure that the 1x1 tile is placed in
+location (1,1).  This is achieved by adding "p01_OK" to the header
+line, so the solution must include "p01_OK".  The only (nonheader)
+line that includes p01_OK is the first line [which
+reads "p01 01_01 p-1_OK"], so this line must be chosen.  So p01 can't
+be chosen again, and neither can 01_01.  So tile p01 ("p" for "piece")
+must be in square 01_01.
+
+Errors such as "Too many branches" may be dealt with by changing the
+#define preprocessor statements at the beginning of the file (in this
+case, max_degree).  I have been a bad boy: I have changed the
+dance_long.c but not the dance_long.w file.
+
+
+Klein bottle stuff.
+
+File "70k.R" is a modification of file "70t.R" that attempts to place
+square tiles on a 70x70 Klein bottle.
+
+
+
+process.R.  This reads the files output by 70.R, 70t.R and 70k.R and
+processes them into a form readable by sage, specifically creating
+files like 70.py [which may have been deleted; it is very large].
+This work turned out to be a waste of time because sage could not read
+matrices that large.
+
+
+There is an extension of this in ~/Dropbox/dancing_links/rotated_70/
+which allows for a rotated 70x70 square.
+
+
+
+Machine "tangoalpha" is a virtual machine which is running the dancing
+links algorithm, and has been for many years.  To check on its
+progress [I think once a year is about right?] type "ssh tangoalpha"
+or indeed "ssh 156.62.1.214" at the command line (in utero nickname
+plus year).  There is a read.me file there which shows how to check
+for a result and how to log in to the other machines (tangobravo etc)
+to check them for results.
