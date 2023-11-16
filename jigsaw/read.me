@@ -1,0 +1,68 @@
+various files: code.R, which creates a file called data.txt that can
+be processed with dance.w (see the readme in ../Knuth).
+
+The other file, code2.R, creates a file called data2.txt which has
+longer names and is much more readable (but is otherwise identical).
+The longer names require one to process with with dance_long.w rather
+than dance.w
+
+
+File butterfly2.txt is a data frame of pieces: 25 lines, one per
+piece.  The colour names are truncated to four letters.  The five
+pieces of a given colour are ordered as follows.  First, each piece is
+oriented so that the butterfly's axis of symmetry is in the first
+quadrant (ie between 12 o'clock and 3 o'clock; pointing up and to the
+right).  Then the five pieces of each colour are ordered by the angle
+the butterfly's body makes with 12 o'clock.  Thus the most 'vertical'
+butterfly is first (number 1), and the most 'horizontal' butterfly is
+last (number 5).  Looking at the butterflies of a particular colour,
+they appear to rotate clockwise from number 1 to number 5.  However,
+this ordering is ambiguous due to ties.  File standard_order.jpg
+defines the order (and indeed the edge types).  Columns 3,4,5,6
+("N","E","S","W") show the edge types of the piece on each of the four
+sides.  Edge type "+n" fits together with edge type "-n" for
+n=1,2,3,4,5.  These numbers (and indeed their signs) are arbitrary,
+but I've missed a trick because it might have been better to assign
+the signs so that "+n" is more abundant than "-n".
+
+File type ".svg" is readable with inkscape. 
+
+File piece_edges.svg shows, on the right hand side, a translation
+between integer edge types (-5,...,-1,1,...,5) and a system of tabs.
+The intention is that edge type "+n" fits with edge type "-n" and only
+that edge type; but there is one misfit: "-5" fits with "-1".  But I
+think that's the only misfit.  The objects go off the edge of the
+paper.  
+
+On the left, the file shows the 25 pieces, placed in standard order,
+with each edge type represented in tab form.  Each piece is identified
+with a moniker in the center; "w1" means "the first white piece".
+
+
+File butterfly_tiles.svg is just a coloured version of piece_edges.svg.
+
+File butterfly_puzzle.svg shows the locations of the pieces.  The
+numbers spiral outwards from 1 in the centre of the puzzle: this is a
+(misconceived) way of optimizing DLX; it would have been better to
+number the locations in rows.  The big numbers 1-25 show where the
+pieces fit and the little numbers 26-225 give the locations of the
+tabs as shown in piece_edges.svg.  There might be tabs sticking out of
+the edge of the puzzle, but these don't have to match and they are
+ignored.
+
+
+The files are: xX xxXX
+XXX Xx XXXXX xxx xxX XX X X xX xxXX XXX Xx XXXXX xxx xxX XX X X xX
+xxXX XXX Xx XXXXX xxx xxX XX X X xX xxXX XXX Xx XXXXX xxx xxX XX X X
+xX xxXX XXX Xx XXXXX xxx xxX XX X X xX xxXX XXX Xx XXXXX xxx xxX XX X
+X xX xxXX XXX Xx XXXXX xxx xxX XX X X xX xxXX XXX Xx XXXXX xxx xxX XX
+X X xX xxXX XXX Xx XXXXX xxx xxX XX X X xX xxXX XXX Xx XXXXX xxx xxX
+XX X X xX xxXX XXX Xx XXXXX xxx xxX XX X X xX xxXX XXX Xx XXXXX xxx
+xxX XX X X xX xxXX XXX Xx XXXXX xxx xxX XX X X xX xxXX XXX Xx XXXXX
+xxx xxX XX X X xX xxXX XXX Xx XXXXX xxx xxX XX X X xX xxXX XXX Xx
+XXXXX xxx xxX XX X X xX xxXX XXX Xx XXXXX xxx xxX XX X X xX xxXX XXX
+Xx XXXXX xxx xxX XX X X xX xxXX XXX Xx XXXXX xxx xxX XX X X xX xxXX
+XXX Xx XXXXX xxx xxX XX X X xX xxXX XXX Xx XXXXX xxx xxX XX X X xX
+xxXX XXX Xx XXXXX xxx xxX XX X X 1xX xxXX XXX Xx XXXXX xxx xxX XX X X
+
+
