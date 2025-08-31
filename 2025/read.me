@@ -230,7 +230,6 @@ X_6x6_23_0003 ... X_6x6_23_2025
 So the full set of constraints for the 6x6 squares will be
 
 
-
 X_2x2_12_0001...X_2x2_12_2025
 
 X_3x3_12_0001...X_3x3_12_2025
@@ -276,5 +275,24 @@ X_9x9_78_0001...X_9x9_78_2025
 X_9x9_89_0001...X_9x9_89_2025
 
 A total of 2025*(1+2+3+...+8) = 2025*36 = 72900 items.  This is a lot.
+These appear after the "|" as they are the optional entries.  Before
+the "|" we have 2025 places and 45 pieces giving a total of
+45+2025+72900=74970 entries altogether.
+
 I guess we are saved to some extent by the relatively small number of
-rows:  we would need less than 2025*45 = 
+rows: we would need
+
+1*45^2 + 2*44^2 + 3*43^2 + ... + 9*(45-9+1)^2
+
+> sum((1:9)*(45:37)^2)
+[1] 71025
+> 
+
+
+In total we have a binary matrix with 74970*71025 ~= 5e9 entries, too
+big for R:
+
+> matrix(0L, 74790, 72900) -> M
+Error: cannot allocate vector of size 20.3 Gb
+
+(note the "L").

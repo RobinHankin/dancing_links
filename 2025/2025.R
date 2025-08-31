@@ -28,7 +28,7 @@ for(i in 2:n){
 }
 
 
-o <- paste(c(o, sprintf("%03d",seq_len(N)), " | ", xlines), collapse = " ")
+o <- paste(c(o, sprintf("%03d", seq_len(N)), " | ", xlines), collapse = " ")
 
 ## Write first line of filename:
 write(o, file = filename, append = FALSE)
