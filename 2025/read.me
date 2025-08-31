@@ -1,0 +1,280 @@
+File 2025.R solves the problem of packing 1 square of size 1x2, 2
+squares of size 2x2, 3 squares of 3x3, and so on up to 'n' squares of
+size nxn into a n(n+2)/2-by-n(n+1)/2 square.  This is motivated by the
+fact that
+
+1^3 + 2^3 + ... + n^3 = (n(n+1)/2)^2.
+
+The canonical case is n=9 in which case we have 1+8+27+...+729 =
+45^2=2025.
+
+However, the standard solution method [which would mirror that used in
+the ../70/ directory] has a massive problem: solving the exact cover
+problem would produce a large number of spurious solutions, because
+the squares are indistinguishable but the algorithm maintains that
+they are actually different.  For example, we have two squares of size
+2x2, say A and B.  Swapping A and B over results in a different
+solution according to exact cover, but really these two are the same.
+
+We can get round this as follows.  Consider a very simple problem with
+five places and three pieces.  The places are 1,2,3,4,5, and the
+pieces are 'A', 'B', 'C'.  Piece 'A' occupies a single place (that is,
+either 1,2,3,4 or 5).  Piece 'B' occupies two conseucutive places
+(that is, 1&2 or 2&3 or 3&4 or 4&5); likewise piece 'C'.  Naive
+implementation of DLX gives us file toy.txt, replicated here:
+
+A B C 1 2 3 4 5
+A 1
+A 2
+A 3
+A 4
+A 5
+B 1 2
+B 2 3
+B 3 4
+B 4 5
+C 1 2
+C 2 3
+C 3 4
+C 4 5
+
+Process this file with
+
+cat toy.txt | ./dance_long 1
+
+
+This gives us six solutions.  The first two are:
+
+1:
+ 1 A (1 of 3)
+ 2 3 B (1 of 2)
+ C 4 5 (1 of 1)
+2:
+ 1 A (1 of 3)
+ 2 3 C (2 of 2)
+ B 4 5 (1 of 1)
+
+[solutions 3, 4, 5, 6 omitted].  But these two solutions are the same
+if we treat pieces 'B' and 'C' as indistinguishable.  The solutions
+are ABBCC and ACCBB.
+
+We can fix this by introducing "forbidden" combinations, as per file
+toy2.txt, shown here:
+
+A B C 1 2 3 4 5 | x1 x2 x3 x4 x5 x6
+A 1
+A 2
+A 3
+A 4
+A 5
+B 1 2 x1
+B 2 3 x1 x2
+B 3 4 x1 x2 x3
+B 4 5 x1 x2 x3 x4
+C 1 2 x1 x2 x3 x4 x5
+C 2 3    x2 x3 x4 x5
+C 3 4       x3 x4 x5
+C 4 5          x4 x5
+
+Above, see how we solve the generalized exact cover problem, with the
+first row having a pipe symbol and after that we have "optional"
+entries x1-x5.  Let us suppose we have chosen row (beginning) "B 3 4".
+Then this carries with it x1 x2 x3.  This forbids choosing row
+beginning "C 1 2" because this carries with it "x1 x2 x3 x4 x5", so
+choosing "C 1 2" means that x1 x2 x3 would be chosen more than once.
+Note that it is OK to have "B 1 2" and "C 3 4" [that is the same as
+before, but with the positions of piece B and C swapped].  This is OK
+because we have "B 1 2 x1" and "C 3 4 x3 x4 x5", no x duplicates.
+
+Above, note that "B 1 2 x1" and "C 2 3 x2 x3 x4" is forbidden because
+of the 2 but the x's do not forbid this combination.  This is because
+the x entries impose the rule "the leftmost place of B must be
+strictly smaller than the leftmost place of C".
+
+
+We can try a slightly different puzzle.  We have three pieces A B C
+with A, B being one place and C being 2.  Piece A must be to the left
+of B, so acceptable solutions are ABCC, ACCB, CCAB.  But BACC etc
+are forbidden.  File toy3.txt:
+
+A B C 1 2 3 4 | x1 x2 x3 x4
+A 1 x1
+A 2 x1 x2
+A 3 x1 x2 x3
+A 4 x1 x2 x3 x4
+B 1 x1 x2 x3 x4
+B 2    x2 x3 x4
+B 3       x3 x4
+B 4          x4
+C 1 2
+C 2 3
+C 3 4
+
+
+Above it is clear that one of the x's is redundant.  Line "A 1 x1" and
+"B 1 x1 x2 x3 x4" is forbidden because of the "1".  The inclusion of
+"x1" in both lines is unnecessary.  We are forbidding A>B but the x's
+allow A=B.  We could have written:
+
+
+A B C 1 2 3 4 | x1 x2 x3 x4
+A 1 x1
+A 2 x1 x2
+A 3 x1 x2 x3
+A 4 x1 x2 x3 x4
+B 1    x2 x3 x4
+B 2       x3 x4
+B 3          x4
+B 4
+C 1 2
+C 2 3
+C 3 4
+
+(which is toy4.txt), which is nicer in some ways, but has the defect
+(?) that line "B 3" has no x's.  Observe that the pipe on line 1 of
+file toy4.txt is necessary: we need to allow "A 1" to be compatible
+with "B 4" and this combination does not have all of x1..x4
+[specifically, x2 and x3 x4 would be absent].
+
+Now another puzzle but this time with three identical pieces.
+solutions ABCDD, ABDDC, ADDBC, DDABC.  Here pieces A, B, C are one
+place, but must be in order A, B, C.  Piece DD takes two consecutive
+places but can be anywhere.  We implement two distinct types of
+forbidden cases, xAB and xBC:
+
+
+A B C D 1 2 3 4 5 | xAB1 xAB2 xAB3 xAB4 xAB5 xBC1 xBC2 xBC3 xBC4 xBC5
+A 1 xAB1
+A 2 xAB1 xAB2
+A 3 xAB1 xAB2 xAB3
+A 4 xAB1 xAB2 xAB3 xAB4
+A 5 xAB1 xAB2 xAB3 xAB4 xAB5
+B 1 xAB1 xAB2 xAB3 xAB4 xAB5    xBC1
+B 2      xAB2 xAB3 xAB4 xAB5    xBC1 xBC2
+B 3           xAB3 xAB4 xAB5    xBC1 xBC2 xBC3
+B 4                xAB4 xAB5    xBC1 xBC2 xBC3 xBC4
+B 5                     xAB5    xBC1 xBC2 xBC3 xBC4 xAB5
+C 1                             xBC1 xBC2 xBC3 xBC4 xBC5
+C 2                                  xBC2 xBC3 xBC4 xBC5
+C 3                                       xBC3 xBC4 xBC5
+C 4                                            xBC4 xBC5
+C 5                                                 xBC5
+D 1 2
+D 2 3
+D 3 4
+D 4 5
+
+
+(above we see file toy5.txt).  Observe that the xAB series places
+forbids A>B and the xBC series forbids B>C.  We do not need an xAC
+series by transitivity.
+
+
+
+File 2025.R produces 'f.txt' which may be processed using:
+
+cat f.txt | ../Knuth/a.out 1 > ans.txt
+
+
+NB: change 'f.txt' to another file [eg ftt.txt] if you wish.  Change
+a.out to another executable [eg dance_long] if you wish.
+
+File f.txt is long: it has many lines.
+
+
+Look:
+
+> matrix(1:49,7,7) -> M
+> M
+     [,1] [,2] [,3] [,4] [,5] [,6] [,7]
+[1,]    1    8   15   22   29   36   43
+[2,]    2    9   16   23   30   37   44
+[3,]    3   10   17   24   31   38   45
+[4,]    4   11   18   25   32   39   46
+[5,]    5   12   19   26   33   40   47
+[6,]    6   13   20   27   34   41   48
+[7,]    7   14   21   28   35   42   49
+> M[3,5]
+[1] 31
+M[3+(5-1)*7]
+[1] 31
+
+Matrix M is a small example of a board.  I will populate the board
+with squares.  A 2x2 square can be
+
+1 8     or      25 32
+2 9             26 33
+
+etc.  A square's location is indexed by its upper left corner, that
+is, the smallest of its entries.
+
+Possible locations for the 2x2 square are thus M[1:6,1:6], and those
+for 3x3 will be M[1:5,1:5].
+
+In the case of n=9 we have M <- matrix(1:2025,45,45).
+
+We will want lines like  (going back to M being 7 by 7):
+
+p1_3x3 18 19 20 25 26 27 32 33 34]
+
+this will be
+
+M <- matrix(1:49,7,7)
+M[4:6, 3:5]
+
+So this means that p1 (which is 3x3) is placed in M[4,3].  Now the x
+lines.  For example, X_6x6_23_023 is the constraint for the second and
+third 6x6 squares.  For this, we will have X_6x6_23_0001 X_6x6_23_0002
+X_6x6_23_0003 ... X_6x6_23_2025
+
+So the full set of constraints for the 6x6 squares will be
+
+
+
+X_2x2_12_0001...X_2x2_12_2025
+
+X_3x3_12_0001...X_3x3_12_2025
+X_3x3_23_0001...X_3x3_23_2025
+
+X_4x4_12_0001...X_4x4_12_2025
+X_4x4_23_0001...X_4x4_23_2025
+X_4x4_34_0001...X_4x4_34_2025
+
+X_5x5_12_0001...X_5x5_12_2025
+X_5x5_23_0001...X_5x5_23_2025
+X_5x5_34_0001...X_5x5_34_2025
+X_5x5_45_0001...X_5x5_45_2025
+
+X_6x6_12_0001...X_6x6_12_2025
+X_6x6_23_0001...X_6x6_23_2025
+X_6x6_34_0001...X_6x6_34_2025
+X_6x6_45_0001...X_6x6_45_2025
+X_6x6_56_0001...X_6x6_56_2025
+
+X_7x7_12_0001...X_7x7_12_2025
+X_7x7_23_0001...X_7x7_23_2025
+X_7x7_34_0001...X_7x7_34_2025
+X_7x7_45_0001...X_7x7_45_2025
+X_7x7_56_0001...X_7x7_56_2025
+X_7x7_67_0001...X_7x7_67_2025
+
+X_8x8_12_0001...X_8x8_12_2025
+X_8x8_23_0001...X_8x8_23_2025
+X_8x8_34_0001...X_8x8_34_2025
+X_8x8_45_0001...X_8x8_45_2025
+X_8x8_56_0001...X_8x8_56_2025
+X_8x8_67_0001...X_8x8_67_2025
+X_8x8_78_0001...X_8x8_78_2025
+
+X_9x9_12_0001...X_9x9_12_2025
+X_9x9_23_0001...X_9x9_23_2025
+X_9x9_34_0001...X_9x9_34_2025
+X_9x9_45_0001...X_9x9_45_2025
+X_9x9_56_0001...X_9x9_56_2025
+X_9x9_67_0001...X_9x9_67_2025
+X_9x9_78_0001...X_9x9_78_2025
+X_9x9_89_0001...X_9x9_89_2025
+
+A total of 2025*(1+2+3+...+8) = 2025*36 = 72900 items.  This is a lot.
+I guess we are saved to some extent by the relatively small number of
+rows:  we would need less than 2025*45 = 

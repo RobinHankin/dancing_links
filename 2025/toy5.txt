@@ -1,0 +1,20 @@
+A B C D 1 2 3 4 5 | xAB1 xAB2 xAB3 xAB4 xAB5 xBC1 xBC2 xBC3 xBC4 xBC5
+A 1 xAB1
+A 2 xAB1 xAB2 
+A 3 xAB1 xAB2 xAB3
+A 4 xAB1 xAB2 xAB3 xAB4
+A 5 xAB1 xAB2 xAB3 xAB4 xAB5
+B 1 xAB1 xAB2 xAB3 xAB4 xAB5    xBC1
+B 2      xAB2 xAB3 xAB4 xAB5    xBC1 xBC2 
+B 3           xAB3 xAB4 xAB5    xBC1 xBC2 xBC3
+B 4                xAB4 xAB5    xBC1 xBC2 xBC3 xBC4
+B 5                     xAB5    xBC1 xBC2 xBC3 xBC4 xAB5
+C 1                             xBC1 xBC2 xBC3 xBC4 xBC5
+C 2                                  xBC2 xBC3 xBC4 xBC5
+C 3                                       xBC3 xBC4 xBC5
+C 4                                            xBC4 xBC5
+C 5                                                 xBC5
+D 1 2
+D 2 3
+D 3 4
+D 4 5
